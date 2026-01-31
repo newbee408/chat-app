@@ -1,6 +1,6 @@
-# 💬 即时聊天APP
+# 💬 即时聊天APP + 🤖 Claude AI机器人
 
-一个基于 Node.js + Socket.IO 的实时聊天应用
+一个基于 Node.js + Socket.IO 的实时聊天应用，集成Claude AI智能机器人
 
 ## 📋 功能特性
 
@@ -11,6 +11,9 @@
 ✅ 消息历史记录  
 ✅ 响应式设计，支持移动端  
 ✅ 美观的渐变UI设计  
+🤖 **Claude AI智能机器人**（新功能！）
+✨ AI对话上下文记忆
+💬 @claude触发AI回复
 
 ## 🚀 快速开始
 
@@ -19,25 +22,52 @@
 npm install
 ```
 
-### 2. 启动服务器
+### 2. 配置API密钥（可选）
+如果要启用Claude AI机器人：
+```bash
+# 复制环境变量模板
+cp .env.example .env
+
+# 编辑.env文件，填入你的API密钥
+# ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxx
+```
+
+获取API密钥：https://console.anthropic.com/
+
+### 3. 启动服务器
 ```bash
 npm start
 ```
 
-### 3. 打开浏览器
-访问 http://localhost:3000
+### 4. 打开浏览器
+访问 http://localhost:8080
 
-### 4. 开始聊天
+### 5. 开始聊天
 - 输入昵称进入聊天室
-- 在输入框输入消息并发送
+- 发送消息与其他用户聊天
+- 发送 `@claude 你好` 与AI机器人对话
 - 可以打开多个浏览器窗口模拟多用户聊天
+
+## 🤖 Claude AI机器人
+
+详细使用说明请查看：[CLAUDE_BOT.md](CLAUDE_BOT.md)
+
+### 快速使用
+```
+@claude 你好
+@claude 帮我写一首诗
+@claude 解释一下WebSocket
+```
 
 ## 📁 项目结构
 
 ```
 chat-app/
-├── server.js           # 后端服务器（Express + Socket.IO）
+├── server.js           # 后端服务器（Express + Socket.IO + Claude AI）
 ├── package.json        # 项目配置文件
+├── .env               # 环境变量（API密钥等）
+├── .env.example       # 环境变量模板
+├── CLAUDE_BOT.md      # AI机器人使用指南
 ├── public/            # 前端文件
 │   ├── index.html     # 主页面
 │   ├── style.css      # 样式文件
@@ -50,6 +80,8 @@ chat-app/
 - **后端**: Node.js + Express + Socket.IO
 - **前端**: HTML5 + CSS3 + JavaScript (原生)
 - **实时通信**: WebSocket (Socket.IO)
+- **AI**: Anthropic Claude API
+- **环境管理**: dotenv
 
 ## 💡 核心功能说明
 

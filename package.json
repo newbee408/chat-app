@@ -1,16 +1,19 @@
 {
   "name": "chat-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "即时聊天应用 - 集成Claude AI机器人",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["chat", "websocket", "socket.io", "claude", "ai"],
+  "author": "newbee408",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.72.1",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "socket.io": "^4.8.3"
   }

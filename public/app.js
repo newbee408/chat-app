@@ -1,4 +1,4 @@
-// 即时聊天APP - 前端逻辑
+// 即时聊天APP - 前端逻辑（支持Claude AI）
 let socket;
 let currentUsername = '';
 
@@ -75,12 +75,19 @@ function setupSocketListeners() {
     // 更新在线用户列表
     socket.on('users:list', (users) => {
         updateUsersList(users);
-        onlineCount.textContent = users.length;
+        // 减1是因为ClaudeBot不算真实用户
+        const realUserCount = users.filter(u => !u.includes('🤖')).length;
+        onlineCount.textContent = realUserCount;
     });
     
     // 用户正在输入
     socket.on('user:typing', (username) => {
         showTypingIndicator(username);
+    });
+    
+    // 机器人正在输入
+    socket.on('bot:typing', (botName) => {
+        showTypingIndicator(botName + ' 🤖');
     });
 }
 
@@ -117,17 +124,39 @@ function displayMessage(message) {
     messageDiv.className = 'message';
     
     const isOwnMessage = message.username === currentUsername;
+    const isBot = message.isBot || message.username === 'ClaudeBot';
+    
+    // 为机器人消息添加特殊样式
+    if (isBot) {
+        messageDiv.classList.add('bot-message');
+    }
     
     messageDiv.innerHTML = `
         <div class="message-header">
-            <span class="message-username">${escapeHtml(message.username)}${isOwnMessage ? ' (我)' : ''}</span>
+            <span class="message-username ${isBot ? 'bot-username' : ''}">${escapeHtml(message.username)}${isOwnMessage ? ' (我)' : ''}${isBot ? ' 🤖' : ''}</span>
             <span class="message-time">${formatTime(message.timestamp)}</span>
         </div>
-        <div class="message-text">${escapeHtml(message.text)}</div>
+        <div class="message-text ${isBot ? 'bot-text' : ''}">${formatMessageText(message.text)}</div>
     `;
     
     messagesList.appendChild(messageDiv);
     scrollToBottom();
+}
+
+// 格式化消息文本（支持简单的Markdown）
+function formatMessageText(text) {
+    let formatted = escapeHtml(text);
+    
+    // 高亮@claude
+    formatted = formatted.replace(/@claude/gi, '<span class="mention">@claude</span>');
+    
+    // 简单的代码块支持
+    formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+    
+    // 换行支持
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    return formatted;
 }
 
 // 显示系统消息
@@ -144,11 +173,20 @@ function updateUsersList(users) {
     usersList.innerHTML = '';
     users.forEach(username => {
         const li = document.createElement('li');
+        const isBot = username.includes('🤖');
+        
         li.textContent = username;
         if (username === currentUsername) {
             li.textContent += ' (我)';
             li.style.fontWeight = 'bold';
         }
+        
+        // 机器人特殊样式
+        if (isBot) {
+            li.style.color = '#667eea';
+            li.style.fontWeight = 'bold';
+        }
+        
         usersList.appendChild(li);
     });
 }
@@ -185,6 +223,18 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
+// 快速插入@claude
+messageInput.addEventListener('keydown', (e) => {
+    // 按下@键时自动补全claude
+    if (e.key === '@' && !messageInput.value.includes('@claude')) {
+        setTimeout(() => {
+            if (messageInput.value.endsWith('@')) {
+                messageInput.value = messageInput.value.slice(0, -1) + '@claude ';
+            }
+        }, 10);
+    }
+});
 
 // 页面加载完成后自动聚焦用户名输入框
 window.addEventListener('load', () => {
