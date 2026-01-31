@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>即时聊天APP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 登录界面 -->
+    <div id="loginScreen" class="screen">
+        <div class="login-container">
+            <h1>💬 即时聊天APP</h1>
+            <p class="subtitle">输入昵称开始聊天</p>
+            <input type="text" id="usernameInput" placeholder="请输入你的昵称" maxlength="20" autofocus>
+            <button id="loginBtn">进入聊天室</button>
+        </div>
+    </div>
+
+    <!-- 聊天界面 -->
+    <div id="chatScreen" class="screen hidden">
+        <div class="chat-container">
+            <!-- 顶部栏 -->
+            <div class="header">
+                <h2>💬 聊天室</h2>
+                <div class="online-count">
+                    <span class="status-dot"></span>
+                    <span id="onlineCount">0</span> 人在线
+                </div>
+            </div>
+
+            <!-- 主体区域 -->
+            <div class="main-content">
+                <!-- 侧边栏 - 在线用户列表 -->
+                <div class="sidebar">
+                    <h3>在线用户</h3>
+                    <ul id="usersList"></ul>
+                </div>
+
+                <!-- 聊天区域 -->
+                <div class="chat-area">
+                    <!-- 消息列表 -->
+                    <div id="messagesList" class="messages-list"></div>
+
+                    <!-- 正在输入提示 -->
+                    <div id="typingIndicator" class="typing-indicator hidden">
+                        <span class="typing-text"></span>
+                    </div>
+
+                    <!-- 输入区域 -->
+                    <div class="input-area">
+                        <input type="text" id="messageInput" placeholder="输入消息..." maxlength="500">
+                        <button id="sendBtn">发送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO 客户端库 -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- 主应用脚本 -->
+    <script src="app.js"></script>
+</body>
+</html>
